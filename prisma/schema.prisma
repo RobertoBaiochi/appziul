@@ -37,10 +37,11 @@ model Client {
 }
 
 model Visit {
-  id          String  @id @default(uuid())
-  description String
-  budget      String
-  approved    Boolean @default(false)
+  id             String  @id @default(uuid())
+  description    String
+  budget         String
+  approved       Boolean @default(false)
+  scheduled_date String
 
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
@@ -52,20 +53,26 @@ model Visit {
 }
 
 model Work {
-  id     String  @id @default(uuid())
-  status Boolean @default(false)
+  id             String  @id @default(uuid())
+  status         Boolean @default(false)
+  description    String
+  budget         String
+  scheduled_date String
 
   client    Client @relation(fields: [client_id], references: [id])
   client_id String
 
-  employers Employer[]
+  employee Employee[]
+
+  @@map("work")
 }
 
-model Employer {
+model Employee {
   id            String  @id @default(uuid())
-  name_employer String
+  name_employee String
   phone         String
   worked_today  Boolean @default(false)
+  dayly_value   String
 
   works   Work   @relation(fields: [work_id], references: [id])
   work_id String
@@ -73,5 +80,5 @@ model Employer {
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
-  @@map("employer")
+  @@map("employee")
 }
