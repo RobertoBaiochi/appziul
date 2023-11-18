@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("user")
+}
+
+model Client {
+  id          String @id @default(uuid())
+  name_client String
+  address     String
+  phone       String
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  visits     Visit[]
+  works      Work[]
+
+  @@map("client")
+}
+
+model Visit {
+  id          String  @id @default(uuid())
+  description String
+  budget      String
+  approved    Boolean @default(false)
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  client    Client @relation(fields: [client_id], references: [id])
+  client_id String
+
+  @@map("visit")
+}
+
+model Work {
+  id     String  @id @default(uuid())
+  status Boolean @default(false)
+
+  client    Client @relation(fields: [client_id], references: [id])
+  client_id String
+
+  employers Employer[]
+}
+
+model Employer {
+  id            String  @id @default(uuid())
+  name_employer String
+  phone         String
+  worked_today  Boolean @default(false)
+
+  works   Work   @relation(fields: [work_id], references: [id])
+  work_id String
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("employer")
+}
