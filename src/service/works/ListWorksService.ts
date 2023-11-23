@@ -3,6 +3,9 @@ import prismaClient from "../../prisma";
 class ListWorksService {
     async execute() {
         const workList = await prismaClient.work.findMany({
+            where: {
+                status: false,
+            },
             select: {
                 id: true,
                 description: true,

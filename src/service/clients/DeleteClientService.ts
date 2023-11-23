@@ -8,24 +8,24 @@ import prismaClient from "../../prisma";
 class DeleteClientService {
     async execute(id: string) {
         //verificando se o cliente existe
-        const clientExist = await prismaClient.client.findUnique({
-            where: {
-                id: id,
-            },
-        });
+        // const clientExist = await prismaClient.client.findUnique({
+        //     where: {
+        //         id: id,
+        //     },
+        // });
 
-        if (!clientExist) {
-            throw new Error("Cliente não existe.");
-        }
+        // if (!clientExist) {
+        //     throw new Error("Cliente não existe.");
+        // }
 
         // deletando o cliente
-        const deletClient = await prismaClient.client.delete({
+        const deleteClient = await prismaClient.client.delete({
             where: {
-                id: id,
+                id,
             },
         });
 
-        return deletClient;
+        return deleteClient;
     }
 }
 

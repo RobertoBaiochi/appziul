@@ -21,6 +21,11 @@ import { DeleteVisitController } from "./controller/visits/DeleteVisitController
 import { UpdateApproveVisitController } from "./controller/works/UpdateApproveVisitController";
 import { CreateWorkController } from "./controller/works/CreateWorkController";
 import { ListWorksController } from "./controller/works/ListWorksController";
+import { ListWorkByIdController } from "./controller/works/ListWorkByIdController";
+import { UpdateWorkController } from "./controller/works/UpdateWorkController";
+import { UpdateFinishWorkController } from "./controller/works/UpdateFinishWorkController";
+import { ListWorksDoneController } from "./controller/works/ListWorksDoneController";
+import { DeleteWorkController } from "./controller/works/DeleteWorkController";
 
 const router = Router();
 
@@ -49,7 +54,7 @@ router.put("/client/:id", isAuthenticated, new UpdateClientController().handle);
 
 // Deletar um cliente
 router.delete(
-    "/client/:id",
+    "/client/remove",
     isAuthenticated,
     new DeleteClientController().handle
 );
@@ -87,5 +92,27 @@ router.post("/work/add", isAuthenticated, new CreateWorkController().handle);
 
 // Listar todos os trabalhos
 router.get("/work", isAuthenticated, new ListWorksController().handle);
+
+// Lista um trabalho pelo ID
+router.get("/work/:id", isAuthenticated, new ListWorkByIdController().handle);
+
+// Atualização dos dados do trabalho pelo ID
+router.put("/work/:id", isAuthenticated, new UpdateWorkController().handle);
+
+// Finalizar um trabalho
+router.put(
+    "/finish/work",
+    isAuthenticated,
+    new UpdateFinishWorkController().handle
+);
+
+// Lista Todos os Trabalhos Concluídos
+router.get("/done/work", isAuthenticated, new ListWorksDoneController().handle);
+
+router.delete(
+    "/delete/work",
+    isAuthenticated,
+    new DeleteWorkController().handle
+);
 
 export { router };

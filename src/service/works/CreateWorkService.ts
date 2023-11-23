@@ -1,6 +1,6 @@
 /*
-    [] buscar a vista pelo id e se for approved for TRUE
-    [] criar o WORK através do visita_id
+    [x] buscar a vista pelo id e se for approved for TRUE
+    [x] criar o WORK através do visita_id
 */
 
 import prismaClient from "../../prisma";
