@@ -32,113 +32,12 @@ const router = Router();
 // ----- USERS -----
 
 // Rota Criar Usuário
-/**
- * @openapi
- * /user:
- *      post:
- *          tags:
- *              - Usuário
- *          summary: Criar um novo usuário
- *          requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  name:
- *                                      type: string
- *                                  email:
- *                                      type: string
- *                                  password:
- *                                      type: string
- *          responses:
- *               201:
- *                  descriprion: Usuário Criado
- *                  content:
- *                      application/json:
- *                          schema:
- *                              type: object
- *                          properties:
- *                              id:
- *                                  type: string
- *                              nome:
- *                                  type: string
- *                              email:
- *                                  type: string
- *
- *
- */
 router.post("/user", new CreateUserController().handle);
 
 //Rota de Login
-/**
- * @openapi
- * /session:
- *      post:
- *          tags:
- *              - Usuário
- *          summary: Login usuário
- *          requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  email:
- *                                      type: string
- *                                  password:
- *                                      type: string
- *          responses:
- *               201:
- *                  descriprion: Usuário Criado
- *                  content:
- *                      application/json:
- *                          schema:
- *                              type: object
- *                          properties:
- *                              id:
- *                                  type: string
- *                              nome:
- *                                  type: string
- *                              email:
- *                                  type: string
- *                              token:
- *                                  type: string
- *
- *
- */
 router.post("/session", new AuthUserController().handle);
 
 // Trazer Detalhes do usuário logado -- Rota de Detalhes do usuário
-/**
- * @openapi
- * /me:
- *   get:
- *     tags:
- *       - Usuário
- *     summary: Retorna dados do usuário
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       201:
- *         description: Usuário existe no banco de dados
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 email:
- *                   type: string
- *       404:
- *          description: Usuário não existe
- *
- */
 router.get("/me", isAuthenticated, new DetailsUserController().handle);
 
 // ----- CLIENTS -----

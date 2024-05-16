@@ -7,9 +7,17 @@ class DetailsUserController {
 
         const detailsUserService = new DetailsUserService();
 
-        const user = await detailsUserService.execute(user_id);
+        try {
+            const user = await detailsUserService.execute(user_id);
 
-        return res.json(user);
+            return res.status(200).json(user);
+        } catch (error) {
+            if (error.status === 401) {
+                return res.status(401).json({ error: error.message });
+            }
+
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 

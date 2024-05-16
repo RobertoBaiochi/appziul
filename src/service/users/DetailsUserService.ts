@@ -1,7 +1,8 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 /*
-    [] retornar detalhes do usuário através do ID do usuário
+    [x] retornar detalhes do usuário através do ID do usuário
 */
 
 class DetailsUserService {
@@ -16,6 +17,10 @@ class DetailsUserService {
                 email: true,
             },
         });
+
+        if (!user) {
+            throw createError(401, "Token inválido");
+        }
 
         return user;
     }

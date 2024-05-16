@@ -1,6 +1,7 @@
 import { compare } from "bcryptjs";
 import prismaClient from "../../prisma";
 import { sign } from "jsonwebtoken";
+import createError from "http-errors";
 
 /*
     [x] Verificar se o usuário existe
@@ -24,14 +25,14 @@ class AuthUserService {
         });
 
         if (!user) {
-            throw new Error("Usuário ou senha inválido.");
+            throw createError(422, "E-mail ou senha inválido.");
         }
 
         // Verificando se a senha está correta
         const matchPassword = compare(password, user.password);
 
         if (!matchPassword) {
-            throw new Error("Usuário ou senha inválido.");
+            throw createError(422, "E-mail ou senha inválido.");
         }
 
         // Gerando um token de login para o usuário

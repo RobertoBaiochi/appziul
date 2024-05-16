@@ -58,6 +58,52 @@
                         "description": "Seu nome"
                     }
                 }
+            },
+            "LoginUser": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "O e-mail que você criou",
+                        "example": "@email.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Digite sua senha"
+                    }
+                }
+            },
+            "ResponseLoginUser": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "Copie seu token para autorizar o acesso das outras rotas"
+                    }
+                }
+            },
+            "ResponseVerifyToken": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                }
             }
         }
     },
@@ -94,6 +140,63 @@
                     },
                     "422": {
                         "description": "Esse usuário já está sendo utilizado"
+                    }
+                }
+            }
+        },
+        "/session": {
+            "post": {
+                "tags": ["Usuário"],
+                "summary": "Verificação de usuário criado",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginUser"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login feito com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseLoginUser"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "E-mail ou senha inválido"
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": ["Usuário"],
+                "summary": "Validação do Token",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token Validado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVerifyToken"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token Inválido"
                     }
                 }
             }
