@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 class VisitByIdService {
     async execute(id: string) {
@@ -15,6 +16,10 @@ class VisitByIdService {
                 client: true,
             },
         });
+
+        if (!visit) {
+            throw createError(404, "A visita não existe");
+        }
 
         return visit;
     }

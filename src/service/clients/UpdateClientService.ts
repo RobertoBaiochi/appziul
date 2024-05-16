@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 /*
     [x] verificar se o ID existe
@@ -23,12 +24,12 @@ class UpdateClientService {
         });
 
         if (!clientExists) {
-            throw new Error("Cliente não existe.");
+            throw createError(404, "O cliente não existe.");
         }
 
         // verificando se os campos estão preenchidos
         if (!name_client || !address || !phone) {
-            throw new Error("Todos os Campos devem estar preenchidos.");
+            throw createError(400, "Todos os Campos devem estar preenchidos.");
         }
 
         // fazendo update dos dados

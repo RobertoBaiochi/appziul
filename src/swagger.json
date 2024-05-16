@@ -4,7 +4,7 @@
         "title": "Api App Ziul",
         "description": "Api criada para possível projeto",
         "contact": {
-            "name": "Suporte",
+            "name": "Support",
             "email": "robertombbaiochi@gmail.com"
         },
         "version": "0.1.0"
@@ -104,14 +104,167 @@
                         "type": "string"
                     }
                 }
+            },
+            "RequireClient": {
+                "type": "object",
+                "properties": {
+                    "name_client": {
+                        "type": "string",
+                        "description": "Digite o nome do seu cliente",
+                        "example": "Fernando"
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "Digite o endereço do cliente",
+                        "example": "Rua , 5"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "Digite o telefone do cliente",
+                        "example": "(21) 93451-2345"
+                    }
+                }
+            },
+            "ResponseCreateClient": {
+                "type": "object",
+                "properties": {
+                    "name_client": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ResponseClients": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name_client": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "visits": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "budget": {
+                                    "type": "string"
+                                },
+                                "approved": {
+                                    "type": "boolean"
+                                },
+                                "created_at": {
+                                    "type": "string"
+                                },
+                                "updated_at": {
+                                    "type": "string"
+                                },
+                                "client_id": {
+                                    "type": "string"
+                                },
+                                "scheduled_date": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "RequireVisit": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "description": "Descrição do trabalho",
+                        "example": "Trocar fiação da cozinha"
+                    },
+                    "budget": {
+                        "type": "string",
+                        "description": "Valor do orçamento",
+                        "example": "500"
+                    },
+                    "scheduled_date": {
+                        "type": "string",
+                        "description": "Data da visita",
+                        "example": "13/10"
+                    },
+                    "cliente_id": {
+                        "type": "string",
+                        "description": "ID do cliente"
+                    }
+                }
+            },
+            "ResponseVisit": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "approved": {
+                        "type": "boolean"
+                    },
+                    "budget": {
+                        "type": "string"
+                    },
+                    "scheduled_date": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name_client": {
+                                "type": "string"
+                            },
+                            "address": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string"
+                            },
+                            "updated_at": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
             }
-        }
+        },
+        "security": [
+            {
+                "bearerAuth": []
+            }
+        ]
     },
-    "security": [
-        {
-            "bearerAuth": []
-        }
-    ],
     "paths": {
         "/user": {
             "post": {
@@ -197,6 +350,453 @@
                     },
                     "401": {
                         "description": "Token Inválido"
+                    }
+                }
+            }
+        },
+        "/client": {
+            "post": {
+                "tags": ["Cliente"],
+                "summary": "Criar um novo cliente",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireClient"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login feito com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCreateClient"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    },
+                    "422": {
+                        "description": "Cliente já existe"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Cliente"],
+                "summary": "Listar todos os clientes",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos os clientes encontrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseClients"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/client/{id}": {
+            "put": {
+                "tags": ["Cliente"],
+                "summary": "Alterar dados do cliente por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireClient"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alteração feita com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCreateClient"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "O cliente não existe"
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Cliente"],
+                "summary": "Listar um único cliente por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseClients"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Todos os compos devem ser preenchidos"
+                    },
+                    "422": {
+                        "description": "Cliente já existe"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Cliente"],
+                "summary": "Deletar o cliente por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login feito com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCreateClient"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "O cliente não existe"
+                    }
+                }
+            }
+        },
+        "/visit": {
+            "post": {
+                "tags": ["Visita"],
+                "summary": "Adicionar uma vista ao cliente",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireVisit"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Visita criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Visita"],
+                "summary": "Listar todas as visitas",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos os clientes encontrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/visit/{id}": {
+            "put": {
+                "tags": ["Visita"],
+                "summary": "Alterar dados da visita por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireVisit"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alteração feita com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A visita não existe"
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Visita"],
+                "summary": "Listar uma única visita por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Visita encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A visita não existe"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Visita"],
+                "summary": "Deletar a visita por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vista deletada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A visita não existe"
+                    }
+                }
+            }
+        },
+        "/work/approved": {
+            "put": {
+                "tags": ["Trabalho"],
+                "summary": "Atualiza status de orçamento para aprovação do trabalho",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireVisit"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Visita criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    }
+                }
+            }
+        },
+        "/work": {
+            "post": {
+                "tags": ["Trabalho"],
+                "summary": "Adicionar uma vista ao cliente",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireVisit"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Visita criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Trabalho"],
+                "summary": "Listar todas as visitas",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos os clientes encontrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseVisit"
+                                }
+                            }
+                        }
                     }
                 }
             }

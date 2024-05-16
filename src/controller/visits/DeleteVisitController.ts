@@ -7,11 +7,19 @@ class DeleteVisitController {
 
         const deleteVisitService = new DeleteVisitService();
 
-        await deleteVisitService.execute({ id });
+        try {
+            await deleteVisitService.execute({ id });
 
-        return res
-            .status(200)
-            .send({ message: "Visita deletada com sucesso." });
+            return res
+                .status(200)
+                .send({ message: "Visita deletada com sucesso." });
+        } catch (error) {
+            if (error.status === 404) {
+                return res.status(404).json({ error: error.message });
+            }
+
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 

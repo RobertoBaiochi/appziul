@@ -43,301 +43,29 @@ router.get("/me", isAuthenticated, new DetailsUserController().handle);
 // ----- CLIENTS -----
 
 // Criar um Cliente
-/**
- * @openapi
- * /client:
- *      post:
- *          tags:
- *              - Cliente
- *          summary: Cria um novo cliente
- *          security:
- *              - bearerAuth: []
- *          requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                                  name_client:
- *                                      type: string
- *                                  address:
- *                                      type: string
- *                                  phone:
- *                                      type: string
- *          responses:
- *               201:
- *                  description: Cliente criado
- *                  content:
- *                      application/json:
- *                          schema:
- *                              type: object
- *                          properties:
- *                              name_client:
- *                                  type: string
- *                              address:
- *                                  type: string
- *                              phone:
- *                                  type: string
- *
- *
- */
+
+// Criar cliente
 router.post("/client", isAuthenticated, new CreateClientController().handle);
 
 // Listar os clientes
-/**
- * @openapi
- * /client:
- *      get:
- *          tags:
- *              - Cliente
- *          summary: Buscar todos os clientes
- *          security:
- *              - bearerAuth: []
- *          responses:
- *               201:
- *                  description: Lista de todos os usuários
- *                  content:
- *                      application/json:
- *                          schema:
- *                              type: array
- *                              items:
- *                                  type: object
- *                                  properties:
- *                                      id:
- *                                          type: string
- *                                      name_client:
- *                                          type: string
- *                                      address:
- *                                          type: string
- *                                      phone:
- *                                          type: string
- *                                      visits:
- *                                          type: array
- *                                          items:
- *                                              type: object
- *                                              properties:
- *                                                  id:
- *                                                      type: string
- *                                                  description:
- *                                                      type: string
- *                                                  budget:
- *                                                      type: string
- *                                                  approved:
- *                                                      type: boolean
- *                                                  created_at:
- *                                                      type: string
- *                                                  updated_at:
- *                                                      type: string
- *                                                  client_id:
- *                                                      type: string
- *                                                  scheduled_date:
- *                                                      type: string
- *
- *
- *
- */
 router.get("/client", isAuthenticated, new ClientListController().handle);
 
 // Mostrar um único cliente
-/**
- * @openapi
- * /client/{id}:
- *   get:
- *     tags:
- *       - Cliente
- *     summary: Buscar cliente por ID
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Dados do cliente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 name_client:
- *                   type: string
- *                 address:
- *                   type: string
- *                 phone:
- *                   type: string
- *                 visits:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                       description:
- *                         type: string
- *                       budget:
- *                         type: string
- *                       approved:
- *                         type: boolean
- *                       created_at:
- *                         type: string
- *                       updated_at:
- *                         type: string
- *                       client_id:
- *                         type: string
- *                       scheduled_date:
- *                         type: string
- *       404:
- *         description: Cliente não encontrado
- */
 router.get("/client/:id", isAuthenticated, new ClientByIdController().handle);
 
 // Atualizar Dados do cliente
-/**
- * @openapi
- * /client/{id}:
- *   put:
- *     tags:
- *       - Cliente
- *     summary: Alterar cliente por ID
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name_client:
- *                 type: string
- *               address:
- *                 type: string
- *               phone:
- *                 type: string
- *     responses:
- *       200:
- *         description: Cliente atualizado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 name_client:
- *                   type: string
- *                 address:
- *                   type: string
- *                 phone:
- *                   type: string
- *       404:
- *         description: Cliente não encontrado
- */
 router.put("/client/:id", isAuthenticated, new UpdateClientController().handle);
 
 // Deletar um cliente
-/**
- * @openapi
- * /client/{id}:
- *   delete:
- *     tags:
- *       - Cliente
- *     summary: Deletar cliente por ID
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       204:
- *         description: Cliente deletado
- *       404:
- *         description: Cliente não encontrado
- */
 router.delete(
-    "/client/remove",
+    "/client/:id",
     isAuthenticated,
     new DeleteClientController().handle
 );
 
 // ----- VISITS -----
 // Criando uma visita
-/**
- * @openapi
- * /visit/add:
- *   post:
- *     tags:
- *       - Visitas
- *     summary: Adicionar uma visita ao cliente
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               description:
- *                 type: string
- *               budget:
- *                 type: string
- *               scheduled_date:
- *                 type: string
- *               client_id:
- *                 type: string
- *     responses:
- *       201:
- *         description: Visita criada
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 approved:
- *                   type: boolean
- *                 budget:
- *                   type: string
- *                 scheduled_date:
- *                   type: string
- *                 description:
- *                   type: string
- *                 client_id:
- *                   type: string
- *                 client:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                     name_client:
- *                       type: string
- *                     address:
- *                       type: string
- *                     phone:
- *                       type: string
- *                     created_at:
- *                       type: string
- *                     updated_at:
- *                       type: string
- */
-router.post("/visit/add", isAuthenticated, new CreateVisitController().handle);
+router.post("/visit", isAuthenticated, new CreateVisitController().handle);
 
 // Listar todas as visitas
 router.get("/visit", isAuthenticated, new ListVisitsController().handle);
@@ -350,7 +78,7 @@ router.put("/visit/:id", isAuthenticated, new UpdateVisitController().handle);
 
 // Deletar uma visita
 router.delete(
-    "/visit/remove",
+    "/visit/:id",
     isAuthenticated,
     new DeleteVisitController().handle
 );

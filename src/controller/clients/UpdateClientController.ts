@@ -8,16 +8,26 @@ class UpdateClientController {
 
         const updateClientService = new UpdateClientService();
 
-        updateClientService.execute({
-            id,
-            name_client,
-            address,
-            phone,
-        });
+        try {
+            const newClient = await updateClientService.execute({
+                id,
+                name_client,
+                address,
+                phone,
+            });
 
-        return res
-            .status(200)
-            .send({ message: "Usuário atualizado com sucesso" });
+            return res.status(200).json(newClient);
+        } catch (error) {
+            if (error.status === 404) {
+                return res.status(404).json({ error: error.message });
+            }
+
+            if (error.status === 400) {
+                return res.status(400).json({ error: error.message });
+            }
+
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 

@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 interface UpdateVisitProps {
     id: string;
@@ -19,9 +20,19 @@ class UpdateVisitService {
         budget,
         description,
     }: UpdateVisitProps) {
+        const idExist = await prismaClient.visit.findUnique({
+            where: {
+                id: id,
+            },
+        });
+
+        if (!idExist) {
+            throw createError(404, "Visita não encontrada");
+        }
+
         // Verificando se todos os dados estão preenchidos
         if (!scheduled_date || !budget || !description) {
-            throw new Error("Todos os campos devem ser preenchidos.");
+            throw createError(422, "Todos os campos devem ser preenchidos.");
         }
 
         const newVisit = await prismaClient.visit.update({

@@ -7,14 +7,22 @@ class CreateVisitController {
 
         const createVisitService = new CreateVisitService();
 
-        const visit = await createVisitService.execute({
-            description,
-            budget,
-            scheduled_date,
-            client_id,
-        });
+        try {
+            const visit = await createVisitService.execute({
+                description,
+                budget,
+                scheduled_date,
+                client_id,
+            });
 
-        return res.json(visit);
+            return res.status(200).json(visit);
+        } catch (error) {
+            if (error.status === 400) {
+                return res.status(400).json({ error: error.message });
+            }
+
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 

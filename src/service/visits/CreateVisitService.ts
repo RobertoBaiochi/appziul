@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 interface CreateVisitProps {
     client_id: string;
@@ -21,7 +22,7 @@ class CreateVisitService {
     }: CreateVisitProps) {
         // Verificando se os itens estão preenchidos
         if (!description || !budget || !scheduled_date || !client_id) {
-            throw new Error("Todos os Campos devem ser preenchidos");
+            throw createError(400, "Todos os Campos devem ser preenchidos");
         }
 
         // Criando visitas

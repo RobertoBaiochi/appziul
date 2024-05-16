@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 class DeleteVisitService {
     async execute({ id }) {
@@ -7,6 +8,10 @@ class DeleteVisitService {
                 id: id,
             },
         });
+
+        if (!deleteVisit) {
+            throw createError(404, "Visita não encontrada");
+        }
 
         return deleteVisit;
     }

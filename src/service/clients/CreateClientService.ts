@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 interface CreateClientProps {
     name_client: string;
@@ -17,7 +18,7 @@ class CreateClientService {
     async execute({ name_client, address, phone }: CreateClientProps) {
         // Verificando se os dados estão preenchidos
         if (!name_client || !address || !phone) {
-            throw new Error("Todos os campos devem ser preenchidos.");
+            throw createError(400, "Todos os campos devem ser preenchidos.");
         }
 
         // Verificando se o nome do cliente já existe
@@ -28,7 +29,7 @@ class CreateClientService {
         });
 
         if (clientAlreadyExists) {
-            throw new Error("Esse Cliente já existe.");
+            throw createError(422, "Esse Cliente já existe.");
         }
 
         // Criando cliente no banco de dados
