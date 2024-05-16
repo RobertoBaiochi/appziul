@@ -7,9 +7,20 @@ class CreateUserController {
 
         const createUserService = new CreateUserService();
 
-        const user = await createUserService.execute({ name, email, password });
+        try {
+            const user = await createUserService.execute({
+                name,
+                email,
+                password,
+            });
+            return res.status(200).json(user);
+        } catch (error) {
+            if (error.status === 422) {
+                return res.status(422).json({ error: error.message });
+            }
 
-        return res.json(user);
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 

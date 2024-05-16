@@ -1,0 +1,102 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Api App Ziul",
+        "description": "Api criada para possível projeto",
+        "contact": {
+            "name": "Suporte",
+            "email": "robertombbaiochi@gmail.com"
+        },
+        "version": "0.1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3333",
+            "description": "Servidor local"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "CreateUser": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Digite seu nome",
+                        "example": "Fernando"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Digite seu e-mail",
+                        "example": "@email.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Digite uma senha"
+                    }
+                }
+            },
+            "ResponseCreateUser": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Digite seu e-mail de login"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Seu nome"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/user": {
+            "post": {
+                "tags": ["Usuário"],
+                "summary": "Criar um usuário",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUser"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCreateUser"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Esse usuário já está sendo utilizado"
+                    }
+                }
+            }
+        }
+    }
+}

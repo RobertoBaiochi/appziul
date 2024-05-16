@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,11 +8,10 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
-
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  password   String
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
@@ -23,62 +19,55 @@ model User {
 }
 
 model Client {
-  id          String @id @default(uuid())
+  id          String    @id @default(uuid())
   name_client String
   address     String
   phone       String
-
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  visits     Visit[]
-  works      Work[]
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @default(now())
+  visits      Visit[]
+  works       Work[]
 
   @@map("client")
 }
 
 model Visit {
-  id             String  @id @default(uuid())
+  id             String    @id @default(uuid())
   description    String
   budget         String
-  approved       Boolean @default(false)
+  approved       Boolean   @default(false)
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @default(now())
+  client_id      String
   scheduled_date String
-
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-
-  client    Client @relation(fields: [client_id], references: [id])
-  client_id String
+  client         Client    @relation(fields: [client_id], references: [id])
 
   @@map("visit")
 }
 
 model Work {
-  id             String  @id @default(uuid())
-  status         Boolean @default(false)
-  description    String
+  id             String     @id @default(uuid())
+  status         Boolean    @default(false)
+  client_id      String
   budget         String
+  description    String
   scheduled_date String
-
-  client    Client @relation(fields: [client_id], references: [id])
-  client_id String
-
-  employee Employee[]
+  employee       Employee[]
+  client         Client     @relation(fields: [client_id], references: [id])
 
   @@map("work")
 }
 
 model Employee {
-  id            String  @id @default(uuid())
+  id            String    @id @default(uuid())
   name_employee String
   phone         String
-  worked_today  Boolean @default(false)
+  worked_today  Boolean   @default(false)
   dayly_value   String
-
-  works   Work   @relation(fields: [work_id], references: [id])
-  work_id String
-
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
+  work_id       String
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @default(now())
+  works         Work      @relation(fields: [work_id], references: [id])
 
   @@map("employee")
 }

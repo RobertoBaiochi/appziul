@@ -1,5 +1,6 @@
 import { hash } from "bcryptjs";
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 interface UserRequest {
     name: string;
@@ -19,7 +20,7 @@ class CreateUserService {
     async execute({ name, email, password }: UserRequest) {
         //Verificando se o email foi enviado
         if (!email) {
-            throw new Error("O e-mail é obrigatório.");
+            throw createError(422, "O e-mail é obrigatório.");
         }
 
         // Verificando se o email já está sendo utilizado
@@ -30,7 +31,7 @@ class CreateUserService {
         });
 
         if (userAlreadyExists) {
-            throw new Error("Esse e-mail já está sendo utilizado.");
+            throw createError(422, "Esse e-mail já está sendo utilizado.");
         }
 
         // Hash da senha
