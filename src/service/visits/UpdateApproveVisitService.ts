@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 class UpdateApproveVisitService {
     async execute(id: string) {
@@ -10,6 +11,10 @@ class UpdateApproveVisitService {
                 approved: true,
             },
         });
+
+        if (!approved) {
+            throw createError(404, "A visita não existe");
+        }
 
         return approved;
     }

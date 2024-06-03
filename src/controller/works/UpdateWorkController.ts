@@ -8,16 +8,28 @@ class UpdateWorkController {
 
         const updateWorkService = new UpdateWorkService();
 
-        await updateWorkService.execute({
-            id,
-            description,
-            budget,
-            scheduled_date,
-        });
+        try {
+            await updateWorkService.execute({
+                id,
+                description,
+                budget,
+                scheduled_date,
+            });
 
-        return res
-            .status(200)
-            .send("Dados do Trabalho atualizados com Sucesso");
+            return res
+                .status(200)
+                .send("Dados do Trabalho atualizados com Sucesso");
+        } catch (error) {
+            if (error.status === 400) {
+                return res.status(400).json({ error: error.message });
+            }
+
+            if (error.status === 404) {
+                return res.status(404).json({ error: error.message });
+            }
+
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 

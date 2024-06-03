@@ -1,9 +1,9 @@
+import prismaClient from "../../prisma";
+import createError from "http-errors";
 /*
     [x] buscar a vista pelo id e se for approved for TRUE
     [x] criar o WORK através do visita_id
 */
-
-import prismaClient from "../../prisma";
 
 interface CreateWorkProps {
     id: string;
@@ -12,6 +12,10 @@ interface CreateWorkProps {
 
 class CreateWorkService {
     async execute({ id, scheduled_date }: CreateWorkProps) {
+        if (!scheduled_date) {
+            throw createError(400, "O campo é o obrigatório");
+        }
+
         // Buscando vista pelo ID e se está APROVADO
         const visitApproved = await prismaClient.visit.findFirst({
             where: {
@@ -19,6 +23,10 @@ class CreateWorkService {
                 approved: true,
             },
         });
+
+        if (!visitApproved) {
+            throw createError(404, "Visita não encontrada");
+        }
 
         //Criando um WORK para Atrás do retorno da visita
         const work = await prismaClient.work.create({

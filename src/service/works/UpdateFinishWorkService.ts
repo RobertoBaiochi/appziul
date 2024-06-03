@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 class UpdateFinishWorkService {
     async execute(id: string) {
@@ -10,6 +11,10 @@ class UpdateFinishWorkService {
                 status: true,
             },
         });
+
+        if (!finishedWork) {
+            throw createError(404, "O trabalho não existe");
+        }
 
         return finishedWork;
     }

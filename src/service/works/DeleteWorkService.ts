@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import createError from "http-errors";
 
 class DeleteWorkService {
     async execute({ id }) {
@@ -7,6 +8,10 @@ class DeleteWorkService {
                 id,
             },
         });
+
+        if (!deleteWork) {
+            throw createError(404, "O trabalho não existe");
+        }
 
         return deleteWork;
     }

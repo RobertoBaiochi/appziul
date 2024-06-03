@@ -257,6 +257,101 @@
                         }
                     }
                 }
+            },
+            "RequireVisitApproved": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ResponseMessage": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RequireCreateWork": {
+                "type": "object",
+                "properties": {
+                    "scheduled_date": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ResponseWork": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "budget": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "employee": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name_employee": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "scheduled_date": {
+                        "type": "string"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name_client": {
+                                "type": "string"
+                            },
+                            "address": {
+                                "type": "string"
+                            },
+                            "phone": {
+                                "type": "string"
+                            },
+                            "created_at": {
+                                "type": "string"
+                            },
+                            "updated_at": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "RequireAlterWork": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "budget": {
+                        "type": "string"
+                    },
+                    "scheduled_date": {
+                        "type": "string"
+                    }
+                }
             }
         },
         "security": [
@@ -708,43 +803,43 @@
                 }
             }
         },
-        "/work/approved": {
+        "/visit/approved/:id": {
             "put": {
-                "tags": ["Trabalho"],
-                "summary": "Atualiza status de orçamento para aprovação do trabalho",
+                "tags": ["Visita"],
+                "summary": "Atualiza status de visita/orçamento para trabalho",
                 "security": [
                     {
                         "bearerAuth": []
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RequireVisit"
-                            }
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
-                        "description": "Visita criada com sucesso",
+                        "description": "Orçamento aprovado",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ResponseVisit"
+                                    "$ref": "#/components/schemas/ResponseMessage"
                                 }
                             }
                         }
                     },
-                    "400": {
-                        "description": "Todos os campos devem ser preenchidos"
+                    "404": {
+                        "description": "A visita não existe"
                     }
                 }
             }
         },
-        "/work": {
+        "/work/add/{id}": {
             "post": {
                 "tags": ["Trabalho"],
                 "summary": "Adicionar uma vista ao cliente",
@@ -753,6 +848,16 @@
                         "bearerAuth": []
                     }
                 ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -765,14 +870,89 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Visita criada com sucesso",
+                        "description": "Trabalho criado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ResponseVisit"
+                                    "$ref": "#/components/schemas/ResponseWork"
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Todos os campos devem ser preenchidos"
+                    },
+                    "404": {
+                        "description": "A visita não existe"
+                    }
+                }
+            }
+        },
+        "/work": {
+            "get": {
+                "tags": ["Trabalho"],
+                "summary": "Listar todos os Trabalhos",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Todos os trabalhos encontrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWork"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/work/{id}": {
+            "put": {
+                "tags": ["Trabalho"],
+                "summary": "Alterar dados do trabalho por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequireAlterWork"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alteração feita com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseMessage"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A visita não existe"
                     },
                     "400": {
                         "description": "Todos os campos devem ser preenchidos"
@@ -781,7 +961,77 @@
             },
             "get": {
                 "tags": ["Trabalho"],
-                "summary": "Listar todas as visitas",
+                "summary": "Listar um único trabalho por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trabalho encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseWork"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "O trabalho não existe"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Trabalho"],
+                "summary": "Deletar o trabalho por ID",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Trabalho deletada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseMessage"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A visita não existe"
+                    }
+                }
+            }
+        },
+        "/done/work": {
+            "get": {
+                "tags": ["Trabalho"],
+                "summary": "Listar todos os Trabalhos concluídos",
                 "security": [
                     {
                         "bearerAuth": []
@@ -789,14 +1039,54 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Todos os clientes encontrados",
+                        "description": "Todos os trabalhos encontrados",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ResponseVisit"
+                                    "$ref": "#/components/schemas/ResponseWork"
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/finish/work": {
+            "put": {
+                "tags": ["Trabalho"],
+                "summary": "Finalizar o trabalho",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Alteração feita com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseMessage"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "O cliente não existe"
                     }
                 }
             }

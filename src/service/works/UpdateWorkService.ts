@@ -1,8 +1,9 @@
+import prismaClient from "../../prisma";
+import createError from "http-errors";
+
 /*
     verificar todas as entradas de dados
 */
-
-import prismaClient from "../../prisma";
 
 interface UpdateWorkProps {
     id: string;
@@ -19,9 +20,7 @@ class UpdateWorkService {
         scheduled_date,
     }: UpdateWorkProps) {
         if (!description || !budget || !scheduled_date) {
-            throw new Error(
-                "[UPDATE_WORK] - Todos os campos devem ser preenchidos"
-            );
+            throw createError(400, "Todos os campos devem ser preenchidos");
         }
 
         const newWorkData = await prismaClient.work.update({
@@ -34,6 +33,10 @@ class UpdateWorkService {
                 scheduled_date,
             },
         });
+
+        if (!newWorkData) {
+            throw createError(404, "O trabalho não existe");
+        }
 
         return newWorkData;
     }

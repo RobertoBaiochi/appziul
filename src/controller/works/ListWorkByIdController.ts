@@ -6,9 +6,17 @@ class ListWorkByIdController {
         const { id } = req.params;
         const listWorkByIdService = new ListWorkByIdService();
 
-        const work = await listWorkByIdService.execute(id);
+        try {
+            const work = await listWorkByIdService.execute(id);
 
-        return res.json(work);
+            return res.json(work);
+        } catch (error) {
+            if (error.status === 404) {
+                return res.status(404).json({ error: error.message });
+            }
+
+            return res.status(500).json({ error: "Internal Error" });
+        }
     }
 }
 
