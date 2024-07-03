@@ -1,5 +1,5 @@
 /*
-    [] retornar apenas um cliente através do id.
+    [x] retornar apenas um cliente através do id.
 */
 
 import prismaClient from "../../prisma";

@@ -16,8 +16,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(router);
 
-// setupSwagger(app);
-
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof Error) {
         //se for uma instancia de erro
