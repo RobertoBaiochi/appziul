@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Api App Ziul",
-        "description": "Api criada para possível projeto",
+        "description": "O projeto é um aplicativo para empresa em que somente gestores tenham acesso, então, ao criar um novo usuário, esse usuário teria total total acesso a todo aplicativo, como lista de clientes, as visitas agendadas e a lista de trabalho em execução e executados, podendo manipular e/ou visualizar os dados necessários.",
         "contact": {
             "name": "Support",
             "email": "robertombbaiochi@gmail.com"
@@ -206,7 +206,7 @@
                         "description": "Data da visita",
                         "example": "13/10"
                     },
-                    "cliente_id": {
+                    "client_id": {
                         "type": "string",
                         "description": "ID do cliente"
                     }
